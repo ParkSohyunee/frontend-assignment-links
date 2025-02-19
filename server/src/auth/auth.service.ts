@@ -40,15 +40,16 @@ export class AuthService {
 
       if (error instanceof Error && 'code' in error) {
         const err = error as { code: string };
-        if (err.code === '23505') {
+        if (err.code === 'ER_DUP_ENTRY') {
           // 이미 존재하는 usename인 경우 catch 구문에서 잡힌 에러코드
           throw new ConflictException('이미 존재하는 아이디입니다.');
+        } else {
+          // 이 외에는 500애러
+          throw new InternalServerErrorException(
+            '회원가입 과정에서 에러가 발생했습니다.',
+          );
         }
       }
-      // 이 외에는 500애러
-      throw new InternalServerErrorException(
-        '회원가입 과정에서 에러가 발생했습니다.',
-      );
     }
   }
 
