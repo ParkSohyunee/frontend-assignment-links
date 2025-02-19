@@ -1,9 +1,13 @@
-function App() {
-  return (
-    <>
-      <h1>Vite + React</h1>
-    </>
-  )
-}
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import LoginPage from './pages/LoginPage'
 
-export default App
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <LoginPage />,
+  },
+])
+
+export default function App() {
+  return <RouterProvider router={router} />
+}
