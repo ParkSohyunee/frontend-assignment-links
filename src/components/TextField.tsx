@@ -14,8 +14,8 @@ export default function TextField({
     <div className="relative">
       <div className="rounded-sm border border-slate-200 focus-within:outline-1 focus-within:outline-indigo-500">
         <input
+          autoComplete="off"
           className="w-full rounded-sm p-2 text-base outline-none"
-          autoFocus
           {...props}
         />
       </div>
