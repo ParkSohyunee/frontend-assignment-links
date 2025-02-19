@@ -10,4 +10,9 @@ export class AuthController {
   signup(@Body(ValidationPipe) authDto: AuthDto) {
     return this.authService.signup(authDto);
   }
+
+  @Post('/login')
+  login(@Body(ValidationPipe) authDto: AuthDto) {
+    return this.authService.login(authDto);
+  }
 }
