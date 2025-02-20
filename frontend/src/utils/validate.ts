@@ -1,5 +1,7 @@
 import { RequestUserType } from '../types'
 
+import { errorMessage } from '../constants'
+
 export const validateForm = (inputs: RequestUserType) => {
   const { username, password } = inputs
 
@@ -9,10 +11,10 @@ export const validateForm = (inputs: RequestUserType) => {
   }
 
   if (!username) {
-    error.username = '아이디를 입력해주세요.'
+    error.username = errorMessage.EMPTY_USERNAME
   }
   if (!password) {
-    error.password = '비밀번호를 입력해주세요.'
+    error.password = errorMessage.ERROR_PASSWORD
   }
 
   return error
