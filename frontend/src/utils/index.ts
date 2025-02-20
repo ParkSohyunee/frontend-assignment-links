@@ -1,1 +1,1 @@
-// Utils
+export * from './validate'
