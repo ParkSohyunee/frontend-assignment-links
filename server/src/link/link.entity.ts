@@ -6,8 +6,8 @@ export class Link extends BaseEntity {
   id: number;
 
   // TODO User 테이블과 연결 필요
-  @Column()
-  createdBy: number;
+  // @Column()
+  // createdBy: number;
 
   @Column()
   name: string;
