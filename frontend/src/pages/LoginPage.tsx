@@ -1,13 +1,29 @@
-import TextField from '../components/TextField'
+import useAuth from '../hooks/useAuth'
 import useForm from '../hooks/useForm'
+
+import TextField from '../components/TextField'
+import { FormEvent } from 'react'
 
 export default function LoginPage() {
   const { inputs, getTextInputProps } = useForm({
     initialValue: {
-      id: '',
+      username: '',
       password: '',
     },
   })
+
+  const { loginMutation } = useAuth()
+
+  const handleLogin = (e: FormEvent) => {
+    e.preventDefault()
+
+    const { username, password } = inputs
+
+    loginMutation.mutate(
+      { username, password },
+      { onError: () => alert('로그인을 다시 시도해주세요.') },
+    )
+  }
 
   return (
     <form className="flex w-96 flex-col gap-4 p-4">
@@ -21,7 +37,7 @@ export default function LoginPage() {
           id="id"
           autoFocus
           placeholder="아이디를 입력해주세요."
-          {...getTextInputProps('id')}
+          {...getTextInputProps('username')}
           isError
           errorMessage="아이디를 입력해주세요."
         />
@@ -38,6 +54,10 @@ export default function LoginPage() {
           {...getTextInputProps('password')}
         />
       </div>
+
+      <button type="submit" onClick={handleLogin}>
+        로그인
+      </button>
     </form>
   )
 }
