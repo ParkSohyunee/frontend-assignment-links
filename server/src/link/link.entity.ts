@@ -17,5 +17,5 @@ export class Link extends BaseEntity {
 
   // TODO Category 테이블과 연결 필요
   @Column()
-  category: number;
+  categoryId: number;
 }

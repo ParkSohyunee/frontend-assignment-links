@@ -11,5 +11,5 @@ export class CreateLinkDto {
 
   @IsNotEmpty()
   @IsNumber()
-  category: number;
+  categoryId: number;
 }
