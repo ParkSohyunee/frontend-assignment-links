@@ -3,8 +3,11 @@ import useForm from '../hooks/useForm'
 
 import TextField from '../components/TextField'
 import { FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function LoginPage() {
+  const navigate = useNavigate()
+
   const { inputs, getTextInputProps } = useForm({
     initialValue: {
       username: '',
@@ -21,7 +24,16 @@ export default function LoginPage() {
 
     loginMutation.mutate(
       { username, password },
-      { onError: () => alert('로그인을 다시 시도해주세요.') },
+      {
+        onSuccess: () => navigate('/links'),
+        onError: ({ isAxiosError, status, response }) => {
+          if (isAxiosError && status === 401) {
+            alert(response?.data.message)
+          } else {
+            alert('로그인을 다시 시도해주세요.')
+          }
+        },
+      },
     )
   }
 
