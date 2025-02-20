@@ -3,11 +3,13 @@ import { InputHTMLAttributes } from 'react'
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   isError?: boolean
   errorMessage?: string
+  touched: boolean
 }
 
 export default function TextField({
   isError = false,
   errorMessage = '',
+  touched,
   ...props
 }: TextFieldProps) {
   return (
@@ -20,7 +22,9 @@ export default function TextField({
         />
       </div>
 
-      {isError && <p className="p-1 text-sm text-red-600">{errorMessage}</p>}
+      {touched && isError && (
+        <p className="p-1 text-sm text-red-600">{errorMessage}</p>
+      )}
     </div>
   )
 }

@@ -9,7 +9,7 @@ import TextField from '../components/TextField'
 import { validateForm } from '../utils'
 import { alertMessage } from '../constants'
 
-export default function LoginPage() {
+export default function SignupPage() {
   const navigate = useNavigate()
 
   const { inputs, touched, errors, getTextInputProps } = useForm({
@@ -17,7 +17,7 @@ export default function LoginPage() {
     validate: validateForm,
   })
 
-  const { loginMutation } = useAuth()
+  const { signupMutation } = useAuth()
 
   const handleLogin = (e: FormEvent) => {
     e.preventDefault()
@@ -29,15 +29,15 @@ export default function LoginPage() {
       return
     }
 
-    loginMutation.mutate(
+    signupMutation.mutate(
       { username, password },
       {
-        onSuccess: () => navigate('/links'),
+        onSuccess: () => navigate('/'),
         onError: ({ isAxiosError, status, response }) => {
-          if (isAxiosError && status === 401) {
+          if (isAxiosError && status === 409) {
             alert(response?.data.message)
           } else {
-            alert(alertMessage.ERROR_LOGIN)
+            alert(alertMessage.ERROR_SIGNUP)
           }
         },
       },
@@ -46,9 +46,10 @@ export default function LoginPage() {
 
   return (
     <form className="flex w-96 flex-col gap-4 p-4">
-      <h1 className="text-xl text-indigo-800">로그인</h1>
+      <h1 className="text-xl text-indigo-800">회원가입</h1>
 
       <div className="flex flex-col justify-center gap-2">
+        {/* TODO 라벨 공통 컴포넌트 */}
         <label htmlFor="id" className="text-sm text-slate-600">
           아이디
         </label>
@@ -78,8 +79,9 @@ export default function LoginPage() {
         />
       </div>
 
+      {/* TODO 버튼 공통컴포넌트 */}
       <button type="submit" onClick={handleLogin}>
-        로그인
+        회원가입
       </button>
     </form>
   )
