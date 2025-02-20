@@ -1,18 +1,19 @@
+import { FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 import useAuth from '../hooks/useAuth'
 import useForm from '../hooks/useForm'
 
 import TextField from '../components/TextField'
-import { FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+
+import { validateForm } from '../utils'
 
 export default function LoginPage() {
   const navigate = useNavigate()
 
-  const { inputs, getTextInputProps } = useForm({
-    initialValue: {
-      username: '',
-      password: '',
-    },
+  const { inputs, touched, errors, getTextInputProps } = useForm({
+    initialValue: { username: '', password: '' },
+    validate: validateForm,
   })
 
   const { loginMutation } = useAuth()
@@ -21,6 +22,11 @@ export default function LoginPage() {
     e.preventDefault()
 
     const { username, password } = inputs
+
+    if (!username || !password) {
+      alert('아이디 또는 비밀번호를 입력해주세요.')
+      return
+    }
 
     loginMutation.mutate(
       { username, password },
@@ -50,8 +56,9 @@ export default function LoginPage() {
           autoFocus
           placeholder="아이디를 입력해주세요."
           {...getTextInputProps('username')}
-          isError
-          errorMessage="아이디를 입력해주세요."
+          touched={touched.username}
+          isError={!!errors.username}
+          errorMessage={errors.username}
         />
       </div>
 
@@ -64,6 +71,9 @@ export default function LoginPage() {
           type="password"
           placeholder="비밀번호를 입력해주세요."
           {...getTextInputProps('password')}
+          touched={touched.password}
+          isError={!!errors.password}
+          errorMessage={errors.password}
         />
       </div>
 
