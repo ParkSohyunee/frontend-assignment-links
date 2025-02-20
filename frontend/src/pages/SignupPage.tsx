@@ -7,6 +7,7 @@ import useForm from '../hooks/useForm'
 import TextField from '../components/TextField'
 
 import { validateForm } from '../utils'
+import { alertMessage } from '../constants'
 
 export default function SignupPage() {
   const navigate = useNavigate()
@@ -24,7 +25,7 @@ export default function SignupPage() {
     const { username, password } = inputs
 
     if (!username || !password) {
-      alert('아이디 또는 비밀번호를 입력해주세요.')
+      alert(alertMessage.EMPTY_FORM_AUTH)
       return
     }
 
@@ -36,7 +37,7 @@ export default function SignupPage() {
           if (isAxiosError && status === 409) {
             alert(response?.data.message)
           } else {
-            alert('회원가입을 다시 시도해주세요.') // TODO constants
+            alert(alertMessage.ERROR_SIGNUP)
           }
         },
       },

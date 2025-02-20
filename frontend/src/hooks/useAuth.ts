@@ -2,7 +2,8 @@ import { useMutation } from '@tanstack/react-query'
 
 import { postLogin, postSignup } from '../api/auth'
 import { UseMutationCustomOptions } from '../types'
-import { setCookie } from '../utils/handleCookie'
+import { setCookie } from '../utils'
+import { tokenKey } from '../constants'
 
 const useSignup = (mutationOptions?: UseMutationCustomOptions) => {
   return useMutation({
@@ -15,8 +16,8 @@ const useLogin = (mutationOptions?: UseMutationCustomOptions) => {
   return useMutation({
     mutationFn: postLogin,
     onSuccess: ({ accessToken, refreshToken }) => {
-      setCookie('accessToken', accessToken, 'AT')
-      setCookie('refreshToken', refreshToken, 'RT')
+      setCookie(tokenKey.ACCESS_TOKEN, accessToken, 'AT')
+      setCookie(tokenKey.REFRESH_TOKEN, refreshToken, 'RT')
     },
     ...mutationOptions,
   })
