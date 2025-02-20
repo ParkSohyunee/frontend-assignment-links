@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
-import { postLogin, postSignup } from '../api/auth'
 
+import { postLogin, postSignup } from '../api/auth'
 import { UseMutationCustomOptions } from '../types'
 import { setCookie } from '../utils/handleCookie'
 
