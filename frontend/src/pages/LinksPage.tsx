@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 
 import useGetCategories from '../hooks/useCategory'
 import useForm from '../hooks/useForm'
@@ -7,6 +6,8 @@ import useLinks from '../hooks/useLinks'
 
 import TextField from '../components/TextField'
 import Modal from '../components/modal/Modal'
+import LinkCard from '../components/LinkCard'
+import Button from '../components/Button'
 
 import { validateLinkForm } from '../utils'
 import { alertMessage, defaultCategoryKey } from '../constants'
@@ -40,19 +41,20 @@ export default function LinksPage() {
   }
 
   return (
-    <div>
-      <div>
-        {categories?.map((category) => (
-          <button
-            key={category.id}
-            id={String(category.id)}
-            className="cursor-pointer"
-          >
-            {category.name}
-          </button>
-        ))}
-
-        <button onClick={() => setIsModalOpen(true)}>링크 추가하기</button>
+    <div className="px-8 py-4">
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          {categories?.map((category) => (
+            <button
+              key={category.id}
+              id={String(category.id)}
+              className="cursor-pointer"
+            >
+              {category.name}
+            </button>
+          ))}
+        </div>
+        <Button onClick={() => setIsModalOpen(true)}>링크 추가하기</Button>
       </div>
 
       <div>
@@ -92,23 +94,8 @@ export default function LinksPage() {
           </Modal>
         )}
 
-        <ul className="flex flex-col gap-4">
-          {links?.map((link) => (
-            <li key={link.id}>
-              <div className="flex justify-between">
-                <button>{link.categoryId}</button>
-                <div className="flex gap-1">
-                  <button>수정</button>
-                  <button>삭제</button>
-                  <button>공유</button>
-                </div>
-              </div>
-              <h2 className="text-xl">{link.name}</h2>
-              <Link to={link.url} target="_blank" className="text-sm">
-                {link.url}
-              </Link>
-            </li>
-          ))}
+        <ul className="grid grid-cols-3 gap-4">
+          {links?.map((link) => <LinkCard key={link.id} link={link} />)}
         </ul>
       </div>
     </div>
