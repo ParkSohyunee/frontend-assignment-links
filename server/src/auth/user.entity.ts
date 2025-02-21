@@ -1,7 +1,9 @@
+import { Link } from 'src/link/link.entity';
 import {
   BaseEntity,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
@@ -17,4 +19,8 @@ export class User extends BaseEntity {
 
   @Column()
   password: string;
+
+  // --OneToMany 한명의 사용자는 여러개의 링크를 가질 수 있다.
+  @OneToMany(() => Link, (link) => link.createdBy, { eager: false })
+  links: Link[];
 }
