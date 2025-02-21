@@ -5,8 +5,10 @@ import { LinkController } from './link.controller';
 import { LinkService } from './link.service';
 import { Link } from './link.entity';
 
+import { AuthModule } from 'src/auth/auth.module';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([Link])],
+  imports: [TypeOrmModule.forFeature([Link]), AuthModule],
   controllers: [LinkController],
   providers: [LinkService],
 })

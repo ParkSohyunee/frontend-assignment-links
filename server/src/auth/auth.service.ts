@@ -19,7 +19,16 @@ export class AuthService {
     private userRepository: Repository<User>,
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) {}
+  ) {
+    console.log('JWT_SECRET: ', this.configService.get('JWT_SECRET')); // 환경변수 불러오는지 확인하는 코드
+  }
+
+  async findByUserName(username: string) {
+    const user = await this.userRepository.findOneBy({ username });
+    console.log('findByUserName: ', user);
+
+    return user;
+  }
 
   async signup(authDto: AuthDto) {
     const { username, password } = authDto;
