@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import useGetCategories from '../hooks/useCategory'
@@ -5,11 +6,14 @@ import useForm from '../hooks/useForm'
 import useLinks from '../hooks/useLinks'
 
 import TextField from '../components/TextField'
+import Modal from '../components/modal/Modal'
 
 import { validateLinkForm } from '../utils'
 import { alertMessage, defaultCategoryKey } from '../constants'
 
 export default function LinksPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const { data: categories } = useGetCategories()
   const {
     getLinksQuery: { data: links },
@@ -29,16 +33,15 @@ export default function LinksPage() {
       return
     }
 
-    createLinkMutation.mutate({
-      name,
-      url,
-      categoryId,
-    })
+    createLinkMutation.mutate(
+      { name, url, categoryId },
+      { onSuccess: () => setIsModalOpen(false) },
+    )
   }
 
   return (
     <div>
-      <section>
+      <div>
         {categories?.map((category) => (
           <button
             key={category.id}
@@ -48,38 +51,46 @@ export default function LinksPage() {
             {category.name}
           </button>
         ))}
-      </section>
 
-      <section>
-        <button onClick={handleCreateLink}>링크 추가하기 +</button>
+        <button onClick={() => setIsModalOpen(true)}>링크 추가하기</button>
+      </div>
 
-        <div className="flex flex-col justify-center gap-2">
-          <label htmlFor="id" className="text-sm text-slate-600">
-            웹 링크 이름
-          </label>
-          <TextField
-            id="name"
-            placeholder="추가할 링크 이름을 입력해주세요."
-            {...getTextInputProps('name')}
-            touched={touched.name}
-            isError={!!errors.name}
-            errorMessage={errors.name}
-          />
-        </div>
+      <div>
+        {isModalOpen && (
+          <Modal onClose={() => setIsModalOpen(false)}>
+            <Modal.Title>링크 추가하기</Modal.Title>
 
-        <div className="flex flex-col justify-center gap-2">
-          <label htmlFor="id" className="text-sm text-slate-600">
-            저장할 웹 사이트의 URL
-          </label>
-          <TextField
-            id="url"
-            placeholder="ex) https://google.com"
-            {...getTextInputProps('url')}
-            touched={touched.url}
-            isError={!!errors.url}
-            errorMessage={errors.url}
-          />
-        </div>
+            <div className="flex w-full flex-col justify-center gap-2">
+              <label htmlFor="id" className="text-sm text-slate-600">
+                웹 링크 이름
+              </label>
+              <TextField
+                id="name"
+                placeholder="추가할 링크 이름을 입력해주세요."
+                {...getTextInputProps('name')}
+                touched={touched.name}
+                isError={!!errors.name}
+                errorMessage={errors.name}
+              />
+            </div>
+
+            <div className="flex w-full flex-col justify-center gap-2">
+              <label htmlFor="id" className="text-sm text-slate-600">
+                저장할 웹 사이트의 URL
+              </label>
+              <TextField
+                id="url"
+                placeholder="ex) https://google.com"
+                {...getTextInputProps('url')}
+                touched={touched.url}
+                isError={!!errors.url}
+                errorMessage={errors.url}
+              />
+            </div>
+
+            <Modal.Button onClick={handleCreateLink}>확인</Modal.Button>
+          </Modal>
+        )}
 
         <ul className="flex flex-col gap-4">
           {links?.map((link) => (
@@ -99,7 +110,7 @@ export default function LinksPage() {
             </li>
           ))}
         </ul>
-      </section>
+      </div>
     </div>
   )
 }
