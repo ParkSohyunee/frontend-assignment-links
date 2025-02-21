@@ -1,8 +1,8 @@
-type CategoryNameType = '즐겨찾기' | '학습' | '참고자료' | '업무'
+import { categoryKey } from '../../constants'
 
 interface CategoryType {
   id: number
-  name: CategoryNameType
+  name: (typeof categoryKey)[keyof typeof categoryKey]
 }
 
 export type CategoriesType = CategoryType[]

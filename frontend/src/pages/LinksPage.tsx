@@ -1,47 +1,11 @@
 import { Link } from 'react-router-dom'
+
 import useGetCategories from '../hooks/useCategory'
-
-const links = [
-  {
-    id: 1,
-    name: 'React',
-    url: 'https://naver.com',
-    createdById: 1,
-    categoryId: 1,
-  },
-  {
-    id: 2,
-    name: 'React',
-    url: 'https://naver.com',
-    createdById: 1,
-    categoryId: 1,
-  },
-  {
-    id: 3,
-    name: 'React',
-    url: 'https://naver.com',
-    createdById: 1,
-    categoryId: 1,
-  },
-  {
-    id: 4,
-    name: 'React',
-    url: 'https://naver.com',
-    createdById: 1,
-    categoryId: 1,
-  },
-  {
-    id: 5,
-
-    name: 'React',
-    url: 'https://naver.com',
-    createdById: 1,
-    categoryId: 1,
-  },
-]
+import useGetLinks from '../hooks/useLinks'
 
 export default function LinksPage() {
   const { data: categories } = useGetCategories()
+  const { data: links } = useGetLinks()
 
   return (
     <div>
@@ -61,7 +25,7 @@ export default function LinksPage() {
         <button>링크 추가하기 +</button>
 
         <ul className="flex flex-col gap-4">
-          {links.map((link) => (
+          {links?.map((link) => (
             <li key={link.id}>
               <div className="flex justify-between">
                 <button>{link.categoryId}</button>
