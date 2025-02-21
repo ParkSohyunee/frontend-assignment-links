@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
+import useGetCategories from '../hooks/useCategory'
 
-const categories = ['즐겨찾기', '학습', '참고자료', '업무']
 const links = [
   {
     id: 1,
@@ -41,12 +41,18 @@ const links = [
 ]
 
 export default function LinksPage() {
+  const { data: categories } = useGetCategories()
+
   return (
     <div>
       <section>
-        {categories.map((category) => (
-          <button key={category} className="cursor-pointer">
-            {category}
+        {categories?.map((category) => (
+          <button
+            key={category.id}
+            id={String(category.id)}
+            className="cursor-pointer"
+          >
+            {category.name}
           </button>
         ))}
       </section>
