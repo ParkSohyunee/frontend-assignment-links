@@ -7,10 +7,12 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Req,
   UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { Request } from 'express';
 
 import { LinkService } from './link.service';
 
@@ -39,8 +41,9 @@ export class LinkController {
   @Post('/links')
   @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe) // --UsePipes: Dto에 정의해 놓은 validation 동작
-  createLink(@Body() createLinkDto: CreateLinkDto) {
-    return this.linkService.createLink(createLinkDto);
+  createLink(@Body() createLinkDto: CreateLinkDto, @Req() req: Request) {
+    const userId = req.user as number;
+    return this.linkService.createLink(createLinkDto, userId);
   }
 
   @Patch('/links/:id')

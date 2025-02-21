@@ -9,6 +9,12 @@ import { Request } from 'express';
 
 import { AuthService } from '../auth.service';
 
+declare module 'express' {
+  export interface Request {
+    user?: number;
+  }
+}
+
 /**
  * guard는 @nestjs/common의 CanActivate 인터페이스를 확장하는 클래스로 구현
  * 이 인터페이스는 canActivate라는 단일 메소드를 정의하며, ExecutionContext 객체를 인수로 취하고, 요청이 진행되어야 하는지 여부를 반환
@@ -51,6 +57,8 @@ export class AuthGuard implements CanActivate {
       if (!user) {
         throw new UnauthorizedException('사용할 수 없는 토큰입니다.');
       }
+      // --요청 객체에 사용자 id 추가
+      request.user = user.id;
     } catch (error) {
       // --토큰이 만료된 경우
       console.log(error); // TokenExpiredError: jwt expired

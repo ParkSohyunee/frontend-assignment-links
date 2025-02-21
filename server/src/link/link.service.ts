@@ -76,15 +76,13 @@ export class LinkService {
     }
   }
 
-  async createLink(createLinkDto: CreateLinkDto) {
+  async createLink(createLinkDto: CreateLinkDto, userId: number) {
     const { name, url, categoryId } = createLinkDto;
-
-    const id = 1; // TODO 임시 user id
 
     const newLink = this.linkRepository.create({
       name,
       url,
-      createdBy: { id }, // TODO createdBy 반환
+      createdBy: { id: userId },
       category: { id: categoryId },
     });
 
