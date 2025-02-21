@@ -19,21 +19,55 @@ export class LinkService {
   ) {}
 
   async getLinks() {
-    return await this.linkRepository.find({
-      order: {
-        id: 'ASC',
-      },
-    });
+    const links = await this.linkRepository
+      .createQueryBuilder('link')
+      .leftJoinAndSelect('link.createdBy', 'createdBy') // createdBy 객체에서 id만 선택
+      .leftJoinAndSelect('link.category', 'category') // category 객체에서 id만 선택
+      .orderBy('link.id', 'ASC')
+      .select([
+        'link.id',
+        'link.name',
+        'link.url',
+        'createdBy.id',
+        'category.id',
+      ])
+      .getMany();
+
+    return links.map((link) => ({
+      id: link.id,
+      createdById: link.createdBy.id,
+      name: link.name,
+      url: link.url,
+      categoryId: link.category.id,
+    }));
   }
 
   async getLinkById(id: number) {
     try {
-      const link = await this.linkRepository.findOneBy({ id });
+      const link = await this.linkRepository
+        .createQueryBuilder('link')
+        .leftJoinAndSelect('link.createdBy', 'createdBy') // createdBy 객체에서 id만 선택
+        .leftJoinAndSelect('link.category', 'category') // category 객체에서 id만 선택
+        .select([
+          'link.id',
+          'link.name',
+          'link.url',
+          'createdBy.id',
+          'category.id',
+        ])
+        .where({ id })
+        .getOne();
 
       if (!link) {
         throw new NotFoundException('존재하지 않는 링크입니다.');
       }
-      return link;
+      return {
+        id: link.id,
+        createdById: link.createdBy.id,
+        name: link.name,
+        url: link.url,
+        categoryId: link.category.id,
+      };
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(
@@ -45,21 +79,31 @@ export class LinkService {
   async createLink(createLinkDto: CreateLinkDto) {
     const { name, url, categoryId } = createLinkDto;
 
-    const link = this.linkRepository.create({
+    const id = 1; // TODO 임시 user id
+
+    const newLink = this.linkRepository.create({
       name,
       url,
-      categoryId,
+      createdBy: { id }, // TODO createdBy 반환
+      category: { id: categoryId },
     });
 
     try {
-      await this.linkRepository.save(link); // DB에 저장
+      const savedLink = await this.linkRepository.save(newLink); // DB에 저장
+
+      return {
+        id: savedLink.id,
+        name: savedLink.name,
+        url: savedLink.url,
+        createdById: savedLink.createdBy.id,
+        categoryId: savedLink.category.id,
+      };
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(
         '링크를 추가하는 도중 에러가 발생했습니다.',
       );
     }
-    return link;
   }
 
   async updateLink(id: number, updateLinkDto: UpdateLinkDto) {
