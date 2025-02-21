@@ -21,7 +21,7 @@ export default function Modal({
       <div className="fixed top-0 left-0 flex h-full w-full flex-col items-center justify-center bg-slate-900/50 p-8">
         <div
           ref={ref}
-          className="flex w-[430px] flex-col items-center justify-center gap-8 rounded-lg bg-white p-6"
+          className="flex w-[430px] flex-col items-start justify-center gap-8 rounded-lg bg-white p-6"
         >
           {children}
         </div>

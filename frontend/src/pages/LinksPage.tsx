@@ -8,12 +8,16 @@ import TextField from '../components/TextField'
 import Modal from '../components/modal/Modal'
 import LinkCard from '../components/LinkCard'
 import Button from '../components/Button'
+import CategoryButton from '../components/CategoryButton'
 
 import { validateLinkForm } from '../utils'
 import { alertMessage, defaultCategoryKey } from '../constants'
+import { CategoryIdType } from '../types'
 
 export default function LinksPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedCategoryId, setSelectedCategoryId] =
+    useState<CategoryIdType>(defaultCategoryKey)
 
   const { data: categories } = useGetCategories()
   const {
@@ -26,8 +30,12 @@ export default function LinksPage() {
     validate: validateLinkForm,
   })
 
+  const handleChangeCategory = (categoryId: CategoryIdType) => {
+    setSelectedCategoryId(categoryId)
+  }
+
   const handleCreateLink = () => {
-    const { name, url, categoryId } = inputs
+    const { name, url } = inputs
 
     if (!name || !url) {
       alert(alertMessage.EMPTY_FORM_LINKS)
@@ -35,7 +43,7 @@ export default function LinksPage() {
     }
 
     createLinkMutation.mutate(
-      { name, url, categoryId },
+      { name, url, categoryId: selectedCategoryId },
       { onSuccess: () => setIsModalOpen(false) },
     )
   }
@@ -88,6 +96,19 @@ export default function LinksPage() {
                 isError={!!errors.url}
                 errorMessage={errors.url}
               />
+            </div>
+
+            <div className="flex gap-2">
+              {categories?.map(({ id, name }) => (
+                <CategoryButton
+                  key={id}
+                  categoryId={id as CategoryIdType}
+                  selectedCategoryId={selectedCategoryId}
+                  handleChangeCategory={handleChangeCategory}
+                >
+                  {name}
+                </CategoryButton>
+              ))}
             </div>
 
             <Modal.Button onClick={handleCreateLink}>확인</Modal.Button>
