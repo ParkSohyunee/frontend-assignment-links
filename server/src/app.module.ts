@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+
 import { AuthModule } from './auth/auth.module';
+import { CategoryModule } from './category/category.module';
+import { LinkModule } from './link/link.module';
 
 @Module({
   imports: [
@@ -17,6 +20,8 @@ import { AuthModule } from './auth/auth.module';
       synchronize: true, // 개발환경에서만 true
     }),
     AuthModule,
+    CategoryModule,
+    LinkModule,
   ],
   providers: [ConfigService],
 })
