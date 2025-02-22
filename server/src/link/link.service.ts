@@ -24,7 +24,7 @@ export class LinkService {
       .createQueryBuilder('link')
       .leftJoinAndSelect('link.createdBy', 'createdBy') // createdBy 객체에서 id만 선택
       .leftJoinAndSelect('link.category', 'category') // category 객체에서 id만 선택
-      .orderBy('link.id', 'ASC')
+      .orderBy('link.createDate', 'DESC')
       .select([
         'link.id',
         'link.name',
