@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import useGetCategories from '../hooks/useCategory'
 import { useGetLinks } from '../hooks/useLinks'
@@ -9,10 +10,18 @@ import Button from '../components/Button'
 import CreateLinkForm from '../components/CreateLinkForm'
 
 export default function LinksPage() {
+  const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const { data: categories } = useGetCategories()
-  const { data: links } = useGetLinks()
+  const { data: links, error: linksError } = useGetLinks()
+
+  if (linksError) {
+    if (linksError?.isAxiosError && linksError.response?.status === 401) {
+      alert(linksError.response?.data.message)
+      navigate('/', { replace: true })
+    }
+  }
 
   return (
     <div className="px-8 py-4">

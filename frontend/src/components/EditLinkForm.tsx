@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import TextField from './TextField'
 import CategoryButton from './CategoryButton'
@@ -18,8 +19,10 @@ interface EditLinkFormProps {
 }
 
 export default function EditLinkForm({ linkId, onClose }: EditLinkFormProps) {
+  const navigate = useNavigate()
+
   const { data: categories } = useGetCategories()
-  const { data } = useGetLinkById(linkId)
+  const { data, error: linkError } = useGetLinkById(linkId)
   const { updateLinkMutation } = useLinksMutation()
 
   const [selectedCategoryId, setSelectedCategoryId] =
@@ -66,6 +69,13 @@ export default function EditLinkForm({ linkId, onClose }: EditLinkFormProps) {
       setSelectedCategoryId(data.categoryId)
     }
   }, [data, setInputs])
+
+  if (linkError) {
+    if (linkError?.isAxiosError && linkError.response?.status === 401) {
+      alert(linkError.response?.data.message)
+      navigate('/', { replace: true })
+    }
+  }
 
   return (
     <Modal onClose={() => onClose()}>

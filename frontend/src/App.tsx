@@ -6,7 +6,13 @@ import SignupPage from './pages/SignupPage'
 import LinksPage from './pages/LinksPage'
 
 // Create a client
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+    },
+  },
+})
 
 const router = createBrowserRouter([
   {
