@@ -107,10 +107,32 @@ export class LinkService {
 
   async updateLink(id: number, updateLinkDto: UpdateLinkDto, userId: number) {
     // --수정할 link 정보 가져오기
-    const link = await this.getLinkById(id);
+    // getLinkById로 반환된 list는 카테고리 컬럼 자체가 아니므로 수정반영이 안됨
+    // getLinkById를 사용할 경우 return 부분에 categoryId: link.category처럼 카테고리 정보를 넣어줘야 함
+    // const link = await this.getLinkById(id);
+
+    // --수정할 link 정보 가져오기
+    // 연관관계가 포함된 리스트 정보를 가져와서 수정해야 조인컬럼인 카테고리 정보까지 끌고올 수 있음
+    const link = await this.linkRepository
+      .createQueryBuilder('link')
+      .leftJoinAndSelect('link.createdBy', 'createdBy') // createdBy 객체에서 id만 선택
+      .leftJoinAndSelect('link.category', 'category') // category 객체에서 id만 선택
+      .select([
+        'link.id',
+        'link.name',
+        'link.url',
+        'createdBy.id',
+        'category.id',
+      ])
+      .where({ id })
+      .getOne();
+
+    if (!link) {
+      throw new NotFoundException('존재하지 않는 링크입니다.');
+    }
 
     // --권한 체크
-    if (userId !== link.createdById) {
+    if (userId !== link.createdBy.id) {
       throw new BadRequestException('링크 수정 권한이 없습니다.');
     }
 
@@ -119,12 +141,18 @@ export class LinkService {
     // --데이터 수정
     link.name = name;
     link.url = url;
-    link.categoryId = categoryId;
+    link.category.id = categoryId;
 
     try {
       await this.linkRepository.save(link); // DB에 저장
 
-      return link;
+      return {
+        id: link.id,
+        createdById: link.createdBy.id,
+        name: link.name,
+        url: link.url,
+        categoryId: link.category.id,
+      };
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(
