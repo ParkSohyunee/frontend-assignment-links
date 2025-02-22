@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -104,9 +105,15 @@ export class LinkService {
     }
   }
 
-  async updateLink(id: number, updateLinkDto: UpdateLinkDto) {
+  async updateLink(id: number, updateLinkDto: UpdateLinkDto, userId: number) {
     // --수정할 link 정보 가져오기
     const link = await this.getLinkById(id);
+
+    // --권한 체크
+    if (userId !== link.createdById) {
+      throw new BadRequestException('링크 수정 권한이 없습니다.');
+    }
+
     const { name, url, categoryId } = updateLinkDto;
 
     // --데이터 수정
@@ -126,7 +133,14 @@ export class LinkService {
     }
   }
 
-  async deleteLink(id: number) {
+  async deleteLink(id: number, userId: number) {
+    const link = await this.getLinkById(id);
+
+    // --권한 체크
+    if (userId !== link.createdById) {
+      throw new BadRequestException('링크 수정 권한이 없습니다.');
+    }
+
     try {
       await this.linkRepository.delete(id);
     } catch (error) {
