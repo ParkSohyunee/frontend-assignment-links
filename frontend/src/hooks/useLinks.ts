@@ -8,7 +8,13 @@ import {
 } from '../types'
 import { alertMessage, queryKey } from '../constants'
 
-import { createLink, getLinkById, getLinks, updateLink } from '../api/links'
+import {
+  createLink,
+  deleteLink,
+  getLinkById,
+  getLinks,
+  updateLink,
+} from '../api/links'
 
 // --링크 전체 조회
 const useGetLinks = (queryOptions?: UseQueryCustomOptions<LinkType[]>) => {
@@ -43,6 +49,14 @@ const useCreateLink = (mutationOptions?: UseMutationCustomOptions) => {
 const useUpdateLink = (mutationOptions?: UseMutationCustomOptions) => {
   return useMutation({
     mutationFn: updateLink,
+    ...mutationOptions,
+  })
+}
+
+// --링크 삭제
+const useDeleteLink = (mutationOptions?: UseMutationCustomOptions) => {
+  return useMutation({
+    mutationFn: deleteLink,
     ...mutationOptions,
   })
 }
@@ -83,7 +97,23 @@ const useLinksMutation = () => {
     },
   })
 
-  return { createLinkMutation, updateLinkMutation }
+  const deleteLinkMutation = useDeleteLink({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [queryKey.getLinks],
+      })
+    },
+    onError: ({ isAxiosError, status, response }) => {
+      if (isAxiosError && status === 401) {
+        alert(response?.data.message)
+        navigate('/', { replace: true }) // 로그인 페이지로 이동
+      } else {
+        alert(alertMessage.ERROR_ADD_LINKS)
+      }
+    },
+  })
+
+  return { createLinkMutation, updateLinkMutation, deleteLinkMutation }
 }
 
 export { useLinksMutation, useGetLinks, useGetLinkById }

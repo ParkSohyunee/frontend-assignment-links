@@ -30,3 +30,7 @@ export const updateLink = async ({ link, id }: UpdateLinkType) => {
 
   return response.data
 }
+
+export const deleteLink = async (id: number) => {
+  return await axiosInstance.delete(`/links/${id}`)
+}

@@ -2,10 +2,12 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import Tag from './Tag'
+import EditLinkForm from './EditLinkForm'
 
 import { LinkType } from '../types'
 import { categoryKey } from '../constants'
-import EditLinkForm from './EditLinkForm'
+
+import { useLinksMutation } from '../hooks/useLinks'
 
 interface LinkCardProps {
   link: LinkType
@@ -15,6 +17,7 @@ export default function LinkCard({ link }: LinkCardProps) {
   const { categoryId, name, url, id } = link
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const { deleteLinkMutation } = useLinksMutation()
 
   return (
     <>
@@ -28,7 +31,10 @@ export default function LinkCard({ link }: LinkCardProps) {
             >
               수정
             </button>
-            <button className="cursor-pointer px-1 py-0.5 hover:text-slate-400">
+            <button
+              onClick={() => deleteLinkMutation.mutate(id)}
+              className="cursor-pointer px-1 py-0.5 hover:text-slate-400"
+            >
               삭제
             </button>
             <button className="cursor-pointer px-1 py-0.5 hover:text-slate-400">
