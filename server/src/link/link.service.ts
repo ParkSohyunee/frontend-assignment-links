@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Link } from './link.entity';
+import { SharedLink } from 'src/shared-link/shared-link.entity';
 
 import { CreateLinkDto } from './dto/createLink.dto';
 import { UpdateLinkDto } from './dto/updateLink.dto';
@@ -17,6 +18,8 @@ export class LinkService {
   constructor(
     @InjectRepository(Link)
     private linkRepository: Repository<Link>,
+    @InjectRepository(SharedLink)
+    private sharedLinkRepository: Repository<SharedLink>,
   ) {}
 
   async getLinks() {
@@ -132,7 +135,16 @@ export class LinkService {
     }
 
     // --권한 체크
-    if (userId !== link.createdBy.id) {
+    // --링크를 공유받은 사용자가 아니거나 작성자가 아니면 권한 없음
+    const sharedLink = await this.sharedLinkRepository.findOne({
+      where: {
+        userId,
+        linkId: id,
+      },
+    });
+
+    // 권한 체크
+    if (!sharedLink && link?.createdBy.id !== userId) {
       throw new BadRequestException('링크 수정 권한이 없습니다.');
     }
 
@@ -177,5 +189,42 @@ export class LinkService {
         '링크를 삭제하는 도중 에러가 발생했습니다.',
       );
     }
+  }
+
+  async searchLinks(categoryId?: number, keyword?: string) {
+    const query = this.linkRepository
+      .createQueryBuilder('link')
+      .leftJoinAndSelect('link.createdBy', 'createdBy')
+      .leftJoinAndSelect('link.category', 'category')
+      .orderBy('link.id', 'ASC') // id 기준 오름차순 정렬
+      .select([
+        'link.id',
+        'link.name',
+        'link.url',
+        'link.create_date',
+        'createdBy.id',
+        'category.id',
+        'category.name',
+      ]);
+
+    // --카테고리id와 일치하는 링크 조회
+    if (categoryId !== undefined) {
+      query.andWhere('category.id = :categoryId', { categoryId });
+    }
+
+    // --키워드 검색(부분 일치)
+    if (keyword && keyword.trim() !== ' ') {
+      query.andWhere('link.name LIKE :keyword', { keyword: `%${keyword}%` });
+    }
+
+    const links = await query.getMany();
+
+    return links.map((link) => ({
+      id: link.id,
+      createdById: link.createdBy.id,
+      name: link.name,
+      url: link.url,
+      categoryId: link.category.id,
+    }));
   }
 }

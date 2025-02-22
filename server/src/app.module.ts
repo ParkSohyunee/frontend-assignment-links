@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './category/category.module';
 import { LinkModule } from './link/link.module';
+import { SharedLinkModule } from './shared-link/shared-link.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { LinkModule } from './link/link.module';
     AuthModule,
     CategoryModule,
     LinkModule,
+    SharedLinkModule,
   ],
   providers: [ConfigService],
 })
