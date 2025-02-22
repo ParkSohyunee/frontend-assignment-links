@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Link } from './link.entity';
+import { SharedLink } from 'src/shared-link/shared-link.entity';
 
 import { CreateLinkDto } from './dto/createLink.dto';
 import { UpdateLinkDto } from './dto/updateLink.dto';
@@ -17,6 +18,8 @@ export class LinkService {
   constructor(
     @InjectRepository(Link)
     private linkRepository: Repository<Link>,
+    @InjectRepository(SharedLink)
+    private sharedLinkRepository: Repository<SharedLink>,
   ) {}
 
   async getLinks() {
@@ -132,7 +135,16 @@ export class LinkService {
     }
 
     // --권한 체크
-    if (userId !== link.createdBy.id) {
+    // --링크를 공유받은 사용자가 아니거나 작성자가 아니면 권한 없음
+    const sharedLink = await this.sharedLinkRepository.findOne({
+      where: {
+        userId,
+        linkId: id,
+      },
+    });
+
+    // 권한 체크
+    if (!sharedLink && link?.createdBy.id !== userId) {
       throw new BadRequestException('링크 수정 권한이 없습니다.');
     }
 
