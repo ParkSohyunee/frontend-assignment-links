@@ -49,11 +49,11 @@ export class AuthGuard implements CanActivate {
 
     // --토큰 검증 및 토큰에서 추출한 정보 확인하기
     try {
-      const payload = await this.jwtService.verifyAsync<{ username: string }>(
+      const payload = await this.jwtService.verifyAsync<{ id: number }>(
         accessToken,
       );
       // --username이 존재하는지 검증
-      const user = await this.authService.findByUserName(payload.username);
+      const user = await this.authService.findById(payload.id);
       if (!user) {
         throw new UnauthorizedException('사용할 수 없는 토큰입니다.');
       }
