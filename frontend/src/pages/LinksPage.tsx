@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import useGetCategories from '../hooks/useCategory'
 import useForm from '../hooks/useForm'
-import useLinks from '../hooks/useLinks'
+import { useLinksMutation, useGetLinks } from '../hooks/useLinks'
 
 import TextField from '../components/TextField'
 import Modal from '../components/modal/Modal'
@@ -16,17 +16,16 @@ import { CategoryIdType } from '../types'
 
 export default function LinksPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+
   const [selectedCategoryId, setSelectedCategoryId] =
     useState<CategoryIdType>(defaultCategoryKey)
 
   const { data: categories } = useGetCategories()
-  const {
-    getLinksQuery: { data: links },
-    createLinkMutation,
-  } = useLinks()
+  const { data: links } = useGetLinks()
+  const { createLinkMutation } = useLinksMutation()
 
   const { inputs, touched, errors, getTextInputProps } = useForm({
-    initialValue: { name: '', url: '', categoryId: defaultCategoryKey },
+    initialValue: { name: '', url: '' },
     validate: validateLinkForm,
   })
 
@@ -111,7 +110,7 @@ export default function LinksPage() {
               ))}
             </div>
 
-            <Modal.Button onClick={handleCreateLink}>확인</Modal.Button>
+            <Modal.Button onClick={handleCreateLink}>추가</Modal.Button>
           </Modal>
         )}
 

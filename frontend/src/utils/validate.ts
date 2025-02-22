@@ -20,13 +20,14 @@ export const validateForm = (inputs: RequestUserType) => {
   return error
 }
 
-export const validateLinkForm = (inputs: RequestLinkType) => {
-  const { name, url, categoryId } = inputs
+export const validateLinkForm = (
+  inputs: Omit<RequestLinkType, 'categoryId'>,
+) => {
+  const { name, url } = inputs
 
   const error = {
     name: '',
     url: '',
-    categoryId: '',
   }
 
   if (!name) {
@@ -34,9 +35,6 @@ export const validateLinkForm = (inputs: RequestLinkType) => {
   }
   if (!url) {
     error.url = errorMessage.EMPTY_LINK_URL
-  }
-  if (!categoryId) {
-    error.categoryId = errorMessage.EMPTY_LINK_CATEGORY
   }
 
   return error

@@ -9,6 +9,7 @@ export const queryKey = {
 
   // 링크
   getLinks: 'getLinks',
+  getLinkById: 'getLinkById',
 } as const
 
 export const categoryKey = {

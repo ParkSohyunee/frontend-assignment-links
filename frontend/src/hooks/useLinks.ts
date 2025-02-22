@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 
 import {
   LinkType,
@@ -6,8 +7,10 @@ import {
   UseQueryCustomOptions,
 } from '../types'
 import { alertMessage, queryKey } from '../constants'
-import { createLink, getLinks } from '../api/links'
 
+import { createLink, getLinkById, getLinks, updateLink } from '../api/links'
+
+// --링크 전체 조회
 const useGetLinks = (queryOptions?: UseQueryCustomOptions<LinkType[]>) => {
   return useQuery({
     queryKey: [queryKey.getLinks],
@@ -16,6 +19,19 @@ const useGetLinks = (queryOptions?: UseQueryCustomOptions<LinkType[]>) => {
   })
 }
 
+// --링크 상세 조회
+const useGetLinkById = (
+  id: number,
+  queryOptions?: UseQueryCustomOptions<LinkType>,
+) => {
+  return useQuery({
+    queryKey: [queryKey.getLinkById, id],
+    queryFn: () => getLinkById(id),
+    ...queryOptions,
+  })
+}
+
+// --링크 생성
 const useCreateLink = (mutationOptions?: UseMutationCustomOptions) => {
   return useMutation({
     mutationFn: createLink,
@@ -23,10 +39,18 @@ const useCreateLink = (mutationOptions?: UseMutationCustomOptions) => {
   })
 }
 
-const useLinks = () => {
-  const queryClient = useQueryClient()
+// --링크 수정
+const useUpdateLink = (mutationOptions?: UseMutationCustomOptions) => {
+  return useMutation({
+    mutationFn: updateLink,
+    ...mutationOptions,
+  })
+}
 
-  const getLinksQuery = useGetLinks()
+const useLinksMutation = () => {
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+
   const createLinkMutation = useCreateLink({
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -36,16 +60,30 @@ const useLinks = () => {
     onError: ({ isAxiosError, status, response }) => {
       if (isAxiosError && status === 401) {
         alert(response?.data.message)
+        navigate('/', { replace: true }) // 로그인 페이지로 이동
       } else {
         alert(alertMessage.ERROR_ADD_LINKS)
       }
     },
   })
 
-  return {
-    getLinksQuery,
-    createLinkMutation,
-  }
+  const updateLinkMutation = useUpdateLink({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [queryKey.getLinks],
+      })
+    },
+    onError: ({ isAxiosError, status, response }) => {
+      if (isAxiosError && status === 401) {
+        alert(response?.data.message)
+        navigate('/', { replace: true }) // 로그인 페이지로 이동
+      } else {
+        alert(alertMessage.ERROR_ADD_LINKS)
+      }
+    },
+  })
+
+  return { createLinkMutation, updateLinkMutation }
 }
 
-export default useLinks
+export { useLinksMutation, useGetLinks, useGetLinkById }
