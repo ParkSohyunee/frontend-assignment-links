@@ -13,6 +13,7 @@ import {
   deleteLink,
   getLinkById,
   getLinks,
+  searchLink,
   updateLink,
 } from '../api/links'
 
@@ -58,6 +59,19 @@ const useDeleteLink = (mutationOptions?: UseMutationCustomOptions) => {
   return useMutation({
     mutationFn: deleteLink,
     ...mutationOptions,
+  })
+}
+
+// --링크 검색
+const useSearchLinks = (
+  categoryId?: number,
+  keyword?: string,
+  queryOptions?: UseQueryCustomOptions<LinkType[]>,
+) => {
+  return useQuery({
+    queryKey: [queryKey.getSearchedLinks, categoryId, keyword],
+    queryFn: () => searchLink({ categoryId, keyword }),
+    ...queryOptions,
   })
 }
 
@@ -116,4 +130,4 @@ const useLinksMutation = () => {
   return { createLinkMutation, updateLinkMutation, deleteLinkMutation }
 }
 
-export { useLinksMutation, useGetLinks, useGetLinkById }
+export { useLinksMutation, useGetLinks, useGetLinkById, useSearchLinks }
