@@ -23,10 +23,8 @@ export class AuthService {
     console.log('JWT_SECRET: ', this.configService.get('JWT_SECRET')); // 환경변수 불러오는지 확인하는 코드
   }
 
-  async findByUserName(username: string) {
-    const user = await this.userRepository.findOneBy({ username });
-    console.log('findByUserName: ', user);
-
+  async findById(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
     return user;
   }
 
@@ -69,7 +67,7 @@ export class AuthService {
   }
 
   // --토큰 생성
-  private async getTokens(payload: { username: string }) {
+  private async getTokens(payload: { id: number }) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: this.configService.get('JWT_SECRET'),
@@ -95,7 +93,7 @@ export class AuthService {
       throw new UnauthorizedException('아이디와 비밀번호를 확인해주세요.');
     }
 
-    const { accessToken, refreshToken } = await this.getTokens({ username });
+    const { accessToken, refreshToken } = await this.getTokens({ id: user.id });
 
     return { accessToken, refreshToken };
   }
