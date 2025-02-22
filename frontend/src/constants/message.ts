@@ -7,6 +7,8 @@ export const alertMessage = {
   // links
   EMPTY_FORM_LINKS: '링크 이름과 url을 입력해주세요.',
   ERROR_ADD_LINKS: '링크 추가를 다시 시도해주세요.',
+  ERROR_UPDATE_LINKS: '링크 수정을 다시 시도해주세요.',
+  ERROR_DELETE_LINKS: '링크 삭제를 다시 시도해주세요.',
 } as const
 
 export const errorMessage = {

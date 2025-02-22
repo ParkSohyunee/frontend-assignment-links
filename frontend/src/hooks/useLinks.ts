@@ -92,7 +92,7 @@ const useLinksMutation = () => {
         alert(response?.data.message)
         navigate('/', { replace: true }) // 로그인 페이지로 이동
       } else {
-        alert(alertMessage.ERROR_ADD_LINKS)
+        alert(alertMessage.ERROR_UPDATE_LINKS)
       }
     },
   })
@@ -108,7 +108,7 @@ const useLinksMutation = () => {
         alert(response?.data.message)
         navigate('/', { replace: true }) // 로그인 페이지로 이동
       } else {
-        alert(alertMessage.ERROR_ADD_LINKS)
+        alert(alertMessage.ERROR_DELETE_LINKS)
       }
     },
   })
