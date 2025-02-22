@@ -3,10 +3,12 @@ import { Category } from 'src/category/category.entity';
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -32,4 +34,10 @@ export class Link extends BaseEntity {
   @ManyToOne(() => Category, (category) => category.links, { eager: false })
   @JoinColumn({ name: 'categoryId' })
   category: Category;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createDate: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updateDate: Date;
 }
