@@ -1,4 +1,8 @@
-import { UseMutationOptions } from '@tanstack/react-query'
+import {
+  QueryKey,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 
 // 기본 에러 타입을 AxiosError 타입으로 변경
@@ -15,4 +19,13 @@ export type UseMutationCustomOptions<
 > = Omit<
   UseMutationOptions<TData, ResponseError, TVariables, unknown>,
   'mutationFn'
+>
+
+// useQuery 옵션을 사용하기 위한 커스텀 타입
+export type UseQueryCustomOptions<
+  TQueryFnData = unknown,
+  TData = TQueryFnData,
+> = Omit<
+  UseQueryOptions<TQueryFnData, ResponseError, TData, QueryKey>,
+  'queryKey'
 >

@@ -3,9 +3,16 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
+import LinksPage from './pages/LinksPage'
 
 // Create a client
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+    },
+  },
+})
 
 const router = createBrowserRouter([
   {
@@ -15,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: '/signup',
     element: <SignupPage />,
+  },
+  {
+    path: '/links',
+    element: <LinksPage />,
   },
 ])
 

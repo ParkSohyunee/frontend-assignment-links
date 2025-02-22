@@ -50,6 +50,7 @@ export default function useForm<T>({
 
   return {
     inputs,
+    setInputs,
     touched,
     errors,
     getTextInputProps,
