@@ -5,7 +5,8 @@ import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import LinksPage from './pages/LinksPage'
 
-// Create a client
+import LoginLayout from './components/layout/Layout'
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -17,11 +18,17 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <LoginPage />,
-  },
-  {
-    path: '/signup',
-    element: <SignupPage />,
+    element: <LoginLayout />,
+    children: [
+      {
+        index: true,
+        element: <LoginPage />,
+      },
+      {
+        path: 'signup',
+        element: <SignupPage />,
+      },
+    ],
   },
   {
     path: '/links',
