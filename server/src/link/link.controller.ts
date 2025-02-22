@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
   UsePipes,
@@ -59,5 +60,15 @@ export class LinkController {
   deleteLink(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const userId = req.user as number;
     return this.linkService.deleteLink(id, userId);
+  }
+
+  @Get('/links/search')
+  searchLinks(
+    @Query('category') category?: string,
+    @Query('keyword') keyword?: string,
+  ) {
+    const categoryId =
+      category && !isNaN(Number(category)) ? Number(category) : undefined;
+    return this.linkService.searchLinks(categoryId, keyword);
   }
 }

@@ -178,4 +178,41 @@ export class LinkService {
       );
     }
   }
+
+  async searchLinks(categoryId?: number, keyword?: string) {
+    const query = this.linkRepository
+      .createQueryBuilder('link')
+      .leftJoinAndSelect('link.createdBy', 'createdBy')
+      .leftJoinAndSelect('link.category', 'category')
+      .orderBy('link.id', 'ASC') // id 기준 오름차순 정렬
+      .select([
+        'link.id',
+        'link.name',
+        'link.url',
+        'link.create_date',
+        'createdBy.id',
+        'category.id',
+        'category.name',
+      ]);
+
+    // --카테고리id와 일치하는 링크 조회
+    if (categoryId !== undefined) {
+      query.andWhere('category.id = :categoryId', { categoryId });
+    }
+
+    // --키워드 검색(부분 일치)
+    if (keyword && keyword.trim() !== ' ') {
+      query.andWhere('link.name LIKE :keyword', { keyword: `%${keyword}%` });
+    }
+
+    const links = await query.getMany();
+
+    return links.map((link) => ({
+      id: link.id,
+      createdById: link.createdBy.id,
+      name: link.name,
+      url: link.url,
+      categoryId: link.category.id,
+    }));
+  }
 }
