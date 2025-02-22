@@ -56,7 +56,9 @@ export default function LinksPage() {
             </CategoryButton>
           ))}
         </div>
-        <Button onClick={() => setIsModalOpen(true)}>링크 추가하기</Button>
+        <Button type="button" onClick={() => setIsModalOpen(true)}>
+          링크 추가하기
+        </Button>
       </div>
 
       <div>

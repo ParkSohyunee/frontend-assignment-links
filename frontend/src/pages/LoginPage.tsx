@@ -5,6 +5,7 @@ import useAuth from '../hooks/useAuth'
 import useForm from '../hooks/useForm'
 
 import TextField from '../components/TextField'
+import Button from '../components/Button'
 
 import { validateForm } from '../utils'
 import { alertMessage } from '../constants'
@@ -45,8 +46,8 @@ export default function LoginPage() {
   }
 
   return (
-    <form className="flex w-96 flex-col gap-4 p-4">
-      <h1 className="text-xl text-indigo-800">로그인</h1>
+    <form className="m-auto flex w-[650px] flex-col gap-6 p-4">
+      <h1 className="mb-10 text-xl text-slate-800">로그인</h1>
 
       <div className="flex flex-col justify-center gap-2">
         <label htmlFor="id" className="text-sm text-slate-600">
@@ -78,9 +79,9 @@ export default function LoginPage() {
         />
       </div>
 
-      <button type="submit" onClick={handleLogin}>
+      <Button type="submit" onClick={handleLogin} className="py-4">
         로그인
-      </button>
+      </Button>
     </form>
   )
 }
