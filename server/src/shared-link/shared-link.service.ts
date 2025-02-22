@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -25,7 +26,7 @@ export class SharedLinkService {
     private linkRepository: Repository<Link>,
   ) {}
 
-  async shareLink(sharedLinkDto: SharedLinkDto) {
+  async shareLink(sharedLinkDto: SharedLinkDto, userId: number) {
     const { linkId, username } = sharedLinkDto;
 
     // --사용자 존재 확인
@@ -34,10 +35,19 @@ export class SharedLinkService {
       throw new NotFoundException(`사용자 "${username}"를 찾을 수 없습니다.`);
     }
 
-    // --링크 존재 확인
-    const link = await this.linkRepository.findOneBy({ id: linkId });
+    // --링크 존재 및 생성자 확인
+    const link = await this.linkRepository.findOne({
+      where: { id: linkId },
+      relations: ['createdBy'],
+    });
+
     if (!link) {
       throw new NotFoundException(`존재하지 않는 링크입니다.`);
+    }
+
+    // --현재 로그인한 사용자가 링크 생성자인지 확인
+    if (link.createdBy.id !== userId) {
+      throw new BadRequestException('자신이 생성한 링크만 공유할 수 있습니다.');
     }
 
     // --중복된 공유 여부 확인

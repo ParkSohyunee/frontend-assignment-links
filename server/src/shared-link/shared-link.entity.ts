@@ -8,7 +8,7 @@ import {
   Unique,
 } from 'typeorm';
 
-@Entity('shared_links')
+@Entity()
 @Unique(['userId', 'linkId']) // --userId와 linkId를 unique key로 설정
 export class SharedLink extends BaseEntity {
   @PrimaryGeneratedColumn()
