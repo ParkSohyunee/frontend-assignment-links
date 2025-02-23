@@ -6,3 +6,4 @@ interface CategoryType {
 }
 
 export type CategoriesType = CategoryType[]
+export type CategoryIdType = keyof typeof categoryKey
