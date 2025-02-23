@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import useGetCategories from '../hooks/useCategory'
@@ -28,6 +28,10 @@ export default function LinksPage() {
     setSelectedCategoryId(categoryId)
   }
 
+  const handleChangeKeyword = (e: ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value)
+  }
+
   if (links) {
     if (error?.isAxiosError && error.response?.status === 401) {
       alert(error.response?.data.message)
@@ -36,8 +40,8 @@ export default function LinksPage() {
   }
 
   return (
-    <div className="px-8 py-4">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="flex flex-col gap-6 px-8 py-4">
+      <div className="flex items-center justify-between">
         <div className="flex gap-2">
           <button
             onClick={() => handleChangeCategory(defaultCategoryKey)}
@@ -59,6 +63,14 @@ export default function LinksPage() {
           ))}
         </div>
         <Button onClick={() => setIsModalOpen(true)}>링크 추가하기</Button>
+      </div>
+
+      <div className="w-96 rounded-sm border border-slate-300 focus-within:outline-1 focus-within:outline-indigo-500">
+        <input
+          placeholder="검색할 링크 이름을 입력해주세요."
+          onChange={handleChangeKeyword}
+          className="w-full rounded-sm p-2 text-base outline-none"
+        />
       </div>
 
       <div>
