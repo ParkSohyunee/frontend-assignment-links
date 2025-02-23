@@ -14,6 +14,7 @@ import {
   getLinkById,
   getLinks,
   searchLink,
+  shareLink,
   updateLink,
 } from '../api/links'
 
@@ -75,6 +76,14 @@ const useSearchLinks = (
   })
 }
 
+// --링크 공유
+const useShareLink = (mutationOptions?: UseMutationCustomOptions) => {
+  return useMutation({
+    mutationFn: shareLink,
+    ...mutationOptions,
+  })
+}
+
 const useLinksMutation = () => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -106,7 +115,7 @@ const useLinksMutation = () => {
         alert(response?.data.message)
         navigate('/', { replace: true }) // 로그인 페이지로 이동
       } else {
-        alert(alertMessage.ERROR_UPDATE_LINKS)
+        alert(response?.data.message)
       }
     },
   })
@@ -122,12 +131,32 @@ const useLinksMutation = () => {
         alert(response?.data.message)
         navigate('/', { replace: true }) // 로그인 페이지로 이동
       } else {
-        alert(alertMessage.ERROR_DELETE_LINKS)
+        alert(response?.data.message)
       }
     },
   })
 
-  return { createLinkMutation, updateLinkMutation, deleteLinkMutation }
+  const useShareLinkMutation = useShareLink({
+    onSuccess: (data, variables) => {
+      console.log(data, variables)
+      alert('링크 공유 완료')
+    },
+    onError: ({ isAxiosError, status, response }) => {
+      if (isAxiosError && status === 401) {
+        alert(response?.data.message)
+        navigate('/', { replace: true }) // 로그인 페이지로 이동
+      } else {
+        alert(response?.data.message)
+      }
+    },
+  })
+
+  return {
+    createLinkMutation,
+    updateLinkMutation,
+    deleteLinkMutation,
+    useShareLinkMutation,
+  }
 }
 
 export { useLinksMutation, useGetLinks, useGetLinkById, useSearchLinks }

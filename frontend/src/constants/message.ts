@@ -9,6 +9,8 @@ export const alertMessage = {
   ERROR_ADD_LINKS: '링크 추가를 다시 시도해주세요.',
   ERROR_UPDATE_LINKS: '링크 수정을 다시 시도해주세요.',
   ERROR_DELETE_LINKS: '링크 삭제를 다시 시도해주세요.',
+  ERROR_SHARE_LINKS: '링크 공유를 다시 시도해주세요.',
+  EMPTY_FORM_SHARE_LINKS: '공유 대상을 입력해주세요.',
 } as const
 
 export const errorMessage = {
