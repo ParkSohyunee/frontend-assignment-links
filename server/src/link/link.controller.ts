@@ -32,6 +32,16 @@ export class LinkController {
     return this.linkService.getLinks();
   }
 
+  @Get('/links/search')
+  searchLinks(
+    @Query('category') category?: string,
+    @Query('keyword') keyword?: string,
+  ) {
+    const categoryId =
+      category && !isNaN(Number(category)) ? Number(category) : undefined;
+    return this.linkService.searchLinks(categoryId, keyword);
+  }
+
   @Get('/links/:id')
   // --Pipe: 데이터 형식을 원하는대로 수정 (ParseIntPipe: Int형식)
   getLinkById(@Param('id', ParseIntPipe) id: number) {
@@ -60,15 +70,5 @@ export class LinkController {
   deleteLink(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const userId = req.user as number;
     return this.linkService.deleteLink(id, userId);
-  }
-
-  @Get('/links/search')
-  searchLinks(
-    @Query('category') category?: string,
-    @Query('keyword') keyword?: string,
-  ) {
-    const categoryId =
-      category && !isNaN(Number(category)) ? Number(category) : undefined;
-    return this.linkService.searchLinks(categoryId, keyword);
   }
 }
