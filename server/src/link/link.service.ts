@@ -178,7 +178,7 @@ export class LinkService {
 
     // --권한 체크
     if (userId !== link.createdById) {
-      throw new BadRequestException('링크 수정 권한이 없습니다.');
+      throw new BadRequestException('링크 삭제 권한이 없습니다.');
     }
 
     try {
@@ -196,12 +196,11 @@ export class LinkService {
       .createQueryBuilder('link')
       .leftJoinAndSelect('link.createdBy', 'createdBy')
       .leftJoinAndSelect('link.category', 'category')
-      .orderBy('link.id', 'ASC') // id 기준 오름차순 정렬
+      .orderBy('link.createDate', 'DESC')
       .select([
         'link.id',
         'link.name',
         'link.url',
-        'link.create_date',
         'createdBy.id',
         'category.id',
         'category.name',
