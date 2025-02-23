@@ -9,7 +9,7 @@ import useForm from '../hooks/useForm'
 import { useLinksMutation } from '../hooks/useLinks'
 
 import { validateLinkForm } from '../utils'
-import { alertMessage, defaultCategoryKey } from '../constants'
+import { alertMessage, createFormDefaultCategory } from '../constants'
 
 interface EditLinkFormProps {
   onClose: () => void
@@ -19,8 +19,9 @@ export default function CreateLinkForm({ onClose }: EditLinkFormProps) {
   const { data: categories } = useGetCategories()
   const { createLinkMutation } = useLinksMutation()
 
-  const [selectedCategoryId, setSelectedCategoryId] =
-    useState(defaultCategoryKey)
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    createFormDefaultCategory,
+  )
 
   const { inputs, touched, errors, getTextInputProps } = useForm({
     initialValue: { name: '', url: '' },
