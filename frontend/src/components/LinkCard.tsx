@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import Tag from './Tag'
 import EditLinkForm from './EditLinkForm'
 
-import { LinkType } from '../types'
+import { CategoryIdType, LinkType } from '../types'
 import { categoryKey } from '../constants'
 
 import { useLinksMutation } from '../hooks/useLinks'
@@ -23,7 +23,7 @@ export default function LinkCard({ link }: LinkCardProps) {
     <>
       <li className="flex flex-col gap-2.5 rounded-lg border border-slate-200 bg-slate-50 px-4 py-6 hover:bg-slate-100">
         <div className="flex justify-between">
-          <Tag>{categoryKey[categoryId]}</Tag>
+          <Tag>{categoryKey[categoryId as CategoryIdType]}</Tag>
           <div className="flex gap-0.5 text-sm">
             <button
               onClick={() => setIsEditModalOpen(true)}
@@ -43,7 +43,11 @@ export default function LinkCard({ link }: LinkCardProps) {
           </div>
         </div>
         <h2 className="text-xl text-slate-900">{name}</h2>
-        <Link to={url} target="_blank" className="text-sm text-blue-600">
+        <Link
+          to={url}
+          target="_blank"
+          className="truncate text-sm text-blue-600"
+        >
           {url}
         </Link>
       </li>

@@ -10,13 +10,15 @@ export const queryKey = {
   // 링크
   getLinks: 'getLinks',
   getLinkById: 'getLinkById',
+  getSearchedLinks: 'getSearchedLinks',
 } as const
 
 export const categoryKey = {
+  0: '전체',
   1: '즐겨찾기',
   2: '학습',
   3: '참고자료',
   4: '업무',
 } as const
 
-export const defaultCategoryKey = 1
+export const defaultCategoryKey = 0

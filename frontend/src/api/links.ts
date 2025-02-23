@@ -34,3 +34,24 @@ export const updateLink = async ({ link, id }: UpdateLinkType) => {
 export const deleteLink = async (id: number) => {
   return await axiosInstance.delete(`/links/${id}`)
 }
+
+interface SearchLinkType {
+  categoryId?: number
+  keyword?: string
+}
+
+export const searchLink = async ({ categoryId, keyword }: SearchLinkType) => {
+  const params = new URLSearchParams()
+
+  if (categoryId) {
+    params.append('category', categoryId.toString())
+  }
+  if (keyword) {
+    params.append('keyword', keyword)
+  }
+
+  const response = await axiosInstance.get<LinkType[]>(
+    `/links/search?${params.toString()}`,
+  )
+  return response.data
+}

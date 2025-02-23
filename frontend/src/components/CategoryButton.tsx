@@ -1,10 +1,8 @@
-import { CategoryIdType } from '../types'
-
 interface CategoryButtonProps {
   children: string
-  categoryId: CategoryIdType
-  selectedCategoryId: CategoryIdType | 'all'
-  handleChangeCategory: (categoryId: CategoryIdType) => void
+  categoryId: number
+  selectedCategoryId?: number
+  handleChangeCategory: (categoryId: number) => void
 }
 
 export default function CategoryButton({

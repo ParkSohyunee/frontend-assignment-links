@@ -8,7 +8,6 @@ import useGetCategories from '../hooks/useCategory'
 import useForm from '../hooks/useForm'
 import { useLinksMutation } from '../hooks/useLinks'
 
-import { CategoryIdType } from '../types'
 import { validateLinkForm } from '../utils'
 import { alertMessage, defaultCategoryKey } from '../constants'
 
@@ -21,14 +20,14 @@ export default function CreateLinkForm({ onClose }: EditLinkFormProps) {
   const { createLinkMutation } = useLinksMutation()
 
   const [selectedCategoryId, setSelectedCategoryId] =
-    useState<CategoryIdType>(defaultCategoryKey)
+    useState(defaultCategoryKey)
 
   const { inputs, touched, errors, getTextInputProps } = useForm({
     initialValue: { name: '', url: '' },
     validate: validateLinkForm,
   })
 
-  const handleChangeCategory = (categoryId: CategoryIdType) => {
+  const handleChangeCategory = (categoryId: number) => {
     setSelectedCategoryId(categoryId)
   }
 
@@ -84,7 +83,7 @@ export default function CreateLinkForm({ onClose }: EditLinkFormProps) {
         {categories?.map(({ id, name }) => (
           <CategoryButton
             key={id}
-            categoryId={id as CategoryIdType}
+            categoryId={id}
             selectedCategoryId={selectedCategoryId}
             handleChangeCategory={handleChangeCategory}
           >
