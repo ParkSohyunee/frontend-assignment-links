@@ -7,7 +7,7 @@ interface ModalButtoneProps {
 
 export default function ModalButton({ children, onClick }: ModalButtoneProps) {
   return (
-    <Button onClick={onClick} className="w-full">
+    <Button type="button" onClick={onClick} className="w-full">
       {children}
     </Button>
   )
