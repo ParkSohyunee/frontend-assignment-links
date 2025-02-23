@@ -78,9 +78,15 @@ export default function LinksPage() {
           <CreateLinkForm onClose={() => setIsModalOpen(false)} />
         )}
 
-        <ul className="grid grid-cols-3 gap-4">
-          {links?.map((link) => <LinkCard key={link.id} link={link} />)}
-        </ul>
+        {links?.length !== 0 ? (
+          <ul className="grid grid-cols-3 gap-4">
+            {links?.map((link) => <LinkCard key={link.id} link={link} />)}
+          </ul>
+        ) : (
+          <p className="text-center text-lg text-slate-700">
+            검색 결과가 없습니다.
+          </p>
+        )}
       </div>
     </div>
   )
