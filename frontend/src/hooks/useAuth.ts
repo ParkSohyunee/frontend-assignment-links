@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 
 import { postLogin, postSignup } from '../api/auth'
 import { UseMutationCustomOptions } from '../types'
-import { setCookie } from '../utils'
+import { removeCookie, setCookie } from '../utils'
 import { tokenKey } from '../constants'
 
 const useSignup = (mutationOptions?: UseMutationCustomOptions) => {
@@ -23,15 +23,18 @@ const useLogin = (mutationOptions?: UseMutationCustomOptions) => {
   })
 }
 
-// TODO 로그아웃
-
 const useAuth = () => {
   const signupMutation = useSignup()
   const loginMutation = useLogin()
+  const logout = () => {
+    removeCookie(tokenKey.ACCESS_TOKEN)
+    removeCookie(tokenKey.REFRESH_TOKEN)
+  }
 
   return {
     signupMutation,
     loginMutation,
+    logout,
   }
 }
 

@@ -1,5 +1,5 @@
 import { FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import useAuth from '../hooks/useAuth'
 import useForm from '../hooks/useForm'
@@ -78,6 +78,13 @@ export default function LoginPage() {
           errorMessage={errors.password}
         />
       </div>
+
+      <Link
+        to={'/signup'}
+        className="text-right text-slate-800 underline underline-offset-4 hover:text-slate-500"
+      >
+        회원가입 하러가기
+      </Link>
 
       <Button type="submit" onClick={handleLogin} className="py-4">
         로그인

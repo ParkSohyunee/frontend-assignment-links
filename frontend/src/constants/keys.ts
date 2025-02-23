@@ -22,3 +22,4 @@ export const categoryKey = {
 } as const
 
 export const defaultCategoryKey = 0
+export const createFormDefaultCategory = 1

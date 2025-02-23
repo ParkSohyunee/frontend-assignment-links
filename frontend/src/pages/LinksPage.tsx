@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import useGetCategories from '../hooks/useCategory'
 import { useSearchLinks } from '../hooks/useLinks'
+import useAuth from '../hooks/useAuth'
 
 import LinkCard from '../components/LinkCard'
 import Button from '../components/Button'
@@ -18,6 +19,7 @@ export default function LinksPage() {
   const [keyword, setKeyword] = useState('')
 
   const { data: categories } = useGetCategories()
+  const { logout } = useAuth()
 
   const [selectedCategoryId, setSelectedCategoryId] =
     useState(defaultCategoryKey)
@@ -30,6 +32,11 @@ export default function LinksPage() {
 
   const handleChangeKeyword = (e: ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value)
+  }
+
+  const handleLogout = () => {
+    logout()
+    navigate('/', { replace: true })
   }
 
   if (links) {
@@ -62,9 +69,14 @@ export default function LinksPage() {
             </CategoryButton>
           ))}
         </div>
-        <Button type="button" onClick={() => setIsModalOpen(true)}>
-          링크 추가하기
-        </Button>
+        <div className="flex gap-2">
+          <Button type="button" onClick={() => setIsModalOpen(true)}>
+            링크 추가하기
+          </Button>
+          <Button type="button" onClick={handleLogout}>
+            로그아웃
+          </Button>
+        </div>
       </div>
 
       <div className="w-96 rounded-sm border border-slate-300 focus-within:outline-1 focus-within:outline-indigo-500">
