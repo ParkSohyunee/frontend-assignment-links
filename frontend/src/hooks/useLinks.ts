@@ -82,7 +82,7 @@ const useLinksMutation = () => {
   const createLinkMutation = useCreateLink({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [queryKey.getLinks],
+        queryKey: [queryKey.getSearchedLinks],
       })
     },
     onError: ({ isAxiosError, status, response }) => {
@@ -98,7 +98,7 @@ const useLinksMutation = () => {
   const updateLinkMutation = useUpdateLink({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [queryKey.getLinks],
+        queryKey: [queryKey.getSearchedLinks],
       })
     },
     onError: ({ isAxiosError, status, response }) => {
@@ -114,7 +114,7 @@ const useLinksMutation = () => {
   const deleteLinkMutation = useDeleteLink({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [queryKey.getLinks],
+        queryKey: [queryKey.getSearchedLinks],
       })
     },
     onError: ({ isAxiosError, status, response }) => {
