@@ -55,3 +55,16 @@ export const searchLink = async ({ categoryId, keyword }: SearchLinkType) => {
   )
   return response.data
 }
+
+interface ShareLinkType {
+  username: string
+  linkId: number
+}
+
+export const shareLink = async ({ username, linkId }: ShareLinkType) => {
+  const response = await axiosInstance.post('/links/share', {
+    username,
+    linkId,
+  })
+  return response.data
+}
